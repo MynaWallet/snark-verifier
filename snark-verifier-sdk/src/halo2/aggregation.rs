@@ -53,6 +53,8 @@ pub struct PreprocessedAndDomainAsWitness {
 
 #[derive(Clone, Debug)]
 pub struct SnarkAggregationWitness<'a> {
+    /// The previous instances of each snark that was aggregated, **including** their accumulators (if any).
+    /// The instances of a single snark are flattened into a 1-d vector.
     pub previous_instances: Vec<Vec<AssignedValue<Fr>>>,
     pub accumulator: KzgAccumulator<G1Affine, Rc<Halo2Loader<'a>>>,
     /// This returns the assigned `preprocessed` and `transcript_initial_state` values as a vector of assigned values, one for each aggregated snark.
@@ -86,7 +88,7 @@ impl VerifierUniversality {
 
 #[allow(clippy::type_complexity)]
 /// Core function used in `synthesize` to aggregate multiple `snarks`.
-///  
+///
 /// Returns the assigned instances of previous snarks and the new final pair that needs to be verified in a pairing check.
 /// For each previous snark, we concatenate all instances into a single vector. We return a vector of vectors,
 /// one vector per snark, for convenience.
@@ -295,8 +297,10 @@ impl TryFrom<BaseCircuitParams> for AggregationConfigParams {
 pub struct AggregationCircuit {
     /// Circuit builder consisting of virtual region managers
     pub builder: BaseCircuitBuilder<Fr>,
-    // the public instances from previous snarks that were aggregated, now collected as PRIVATE assigned values
-    // the user can optionally append these to `inner.assigned_instances` to expose them
+    /// The previous public instances of each snark that was aggregated, **including** their accumulators (if any).
+    /// The instances of a single snark are flattened into a 1-d vector.
+    /// These are now collected as PRIVATE assigned values.
+    /// The user can optionally append these to `inner.assigned_instances` to expose them.
     #[getset(get = "pub")]
     previous_instances: Vec<Vec<AssignedValue<Fr>>>,
     /// This returns the assigned `preprocessed_digest` (vkey), optional `transcript_initial_state`, `domain.n` (optional), and `omega` (optional) values as a vector of assigned values, one for each aggregated snark.
@@ -334,6 +338,8 @@ pub trait Halo2KzgAccumulationScheme<'a> = PolynomialCommitmentScheme<
 /// Same as [SnarkAggregationWitness] except that we flatten `accumulator` into a vector of field elements.
 #[derive(Clone, Debug)]
 pub struct SnarkAggregationOutput {
+    /// The previous public instances of each snark that was aggregated, **including** their accumulators (if any).
+    /// The instances of a single snark are flattened into a 1-d vector.
     pub previous_instances: Vec<Vec<AssignedValue<Fr>>>,
     pub accumulator: Vec<AssignedValue<Fr>>,
     /// This returns the assigned `preprocessed` and `transcript_initial_state` values as a vector of assigned values, one for each aggregated snark.
@@ -360,7 +366,7 @@ pub enum AssignedTranscriptObject {
 /// ## Universality
 /// - If `universality` is not `None`, then the verifying keys of each snark in `snarks` is loaded as a witness in the circuit.
 /// - Moreover, if `universality` is `Full`, then the number of rows `n` of each snark in `snarks` is also loaded as a witness. In this case the generator `omega` of the order `n` multiplicative subgroup of `F` is also loaded as a witness.
-/// - By default, these witnesses are _private_ and returned in `self.preprocessed_digests
+/// - By default, these witnesses are _private_ and returned in `self.preprocessed_digests`
 /// - The user can optionally modify the circuit after calling this function to add more instances to `assigned_instances` to expose.
 ///
 /// ## Warning
