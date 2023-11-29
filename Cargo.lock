@@ -1135,13 +1135,33 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "eabb4a44450da02c90444cf74558da904edde8fb4e9035a9a6a4e15445af0bd7"
 
 [[package]]
+name = "halo2-axiom"
+version = "0.4.0"
+source = "git+https://github.com/axiom-crypto/halo2.git#e841084b8fb5cffd1390b4901e89812c861dffb1"
+dependencies = [
+ "blake2b_simd",
+ "crossbeam",
+ "ff",
+ "group",
+ "halo2curves-axiom",
+ "itertools 0.11.0",
+ "maybe-rayon",
+ "pairing",
+ "rand",
+ "rand_core",
+ "rustc-hash",
+ "sha3 0.10.8",
+ "tracing",
+]
+
+[[package]]
 name = "halo2-base"
 version = "0.4.0"
-source = "git+https://github.com/axiom-crypto/halo2-lib.git?branch=release-0.4.0-rc#67e3a0eee37c3b25b393cdea7514fef4e8af0bf9"
+source = "git+https://github.com/MynaWallet/halo2-lib.git?branch=sha256#1d4464051201e404a098c207fec5c8b8a16041e3"
 dependencies = [
  "getset",
- "halo2_proofs 0.2.0",
- "halo2_proofs 0.2.0 (git+https://github.com/privacy-scaling-explorations/halo2.git?rev=7a21656)",
+ "halo2-axiom",
+ "halo2_proofs",
  "itertools 0.11.0",
  "jemallocator",
  "log",
@@ -1159,7 +1179,7 @@ dependencies = [
 [[package]]
 name = "halo2-ecc"
 version = "0.4.0"
-source = "git+https://github.com/axiom-crypto/halo2-lib.git?branch=release-0.4.0-rc#67e3a0eee37c3b25b393cdea7514fef4e8af0bf9"
+source = "git+https://github.com/MynaWallet/halo2-lib.git?branch=sha256#1d4464051201e404a098c207fec5c8b8a16041e3"
 dependencies = [
  "halo2-base",
  "itertools 0.10.5",
@@ -1178,30 +1198,12 @@ dependencies = [
 [[package]]
 name = "halo2_proofs"
 version = "0.2.0"
-dependencies = [
- "blake2b_simd",
- "crossbeam",
- "ff",
- "group",
- "halo2curves 0.4.0",
- "maybe-rayon",
- "pairing",
- "rand",
- "rand_core",
- "rustc-hash",
- "sha3 0.10.8",
- "tracing",
-]
-
-[[package]]
-name = "halo2_proofs"
-version = "0.2.0"
 source = "git+https://github.com/privacy-scaling-explorations/halo2.git?rev=7a21656#7a2165617195d8baa422ca7b2b364cef02380390"
 dependencies = [
  "blake2b_simd",
  "ff",
  "group",
- "halo2curves 0.1.0",
+ "halo2curves",
  "maybe-rayon",
  "rand_chacha",
  "rand_core",
@@ -1230,9 +1232,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "halo2curves"
-version = "0.4.0"
-source = "git+https://github.com/axiom-crypto/halo2curves.git?branch=main#e185711b6ba8f3e22f2af8bf24a5fc84b781ca46"
+name = "halo2curves-axiom"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4d82f25182a221a5c79ce8d41d1dd3910f10626d7e9d0f9f9e9336e2545b7d1f"
 dependencies = [
  "blake2b_simd",
  "ff",
